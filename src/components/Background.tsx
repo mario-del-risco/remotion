@@ -1,7 +1,7 @@
 // src/components/Background.tsx
 import React from "react";
 
-export const Background: React.FC = () => {
+export const Background: React.FC<{ zIndex?: number }> = ({ zIndex = -1 }) => {
   return (
     <div
       style={{
@@ -9,6 +9,7 @@ export const Background: React.FC = () => {
         width: "100%",
         height: "100%",
         position: "absolute",
+        zIndex, // now works!
       }}
     />
   );

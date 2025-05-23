@@ -6,10 +6,23 @@ export const LorieTitle: React.FC<{
   quadrant?: string;
   speed?: number;
   textAlign?: "left" | "right" | "center";
-}> = ({ quadrant, speed, textAlign = "center" }) => (
+  distance?: number;
+  damping?: number;
+  stiffness?: number;
+}> = ({
+  quadrant,
+  speed,
+  textAlign = "center",
+  distance,
+  damping,
+  stiffness,
+}) => (
   <AnimatedText
     quadrant={quadrant}
     speed={speed}
+    distance={distance}
+    damping={damping}
+    stiffness={stiffness}
     style={{
       fontSize: 68,
       color: "#1c1c1c",

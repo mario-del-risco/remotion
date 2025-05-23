@@ -11,7 +11,7 @@ export const Subtext: React.FC<{
     quadrant={quadrant}
     speed={speed}
     style={{
-      fontSize: 28,
+      fontSize: 32,
       color: "#333",
       fontFamily: '"DM Sans", sans-serif',
       textAlign,
@@ -19,7 +19,6 @@ export const Subtext: React.FC<{
       lineHeight: 1.5,
     }}
   >
-    Discover how structure and story shape our latest interiors. Read the new
-    blog on architectural elegance → lorieinteriors.com/blog
+    This is what we say!
   </AnimatedText>
 );

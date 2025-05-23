@@ -1,15 +1,37 @@
 // src/components/AnimatedText.tsx
 import React from "react";
-import { useCurrentFrame, useVideoConfig, interpolate, spring } from "remotion";
+import { useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
 
-type Quadrant = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+type Direction =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right"
+  | "top"
+  | "bottom"
+  | "left"
+  | "right"
+  | "center";
 
-export const AnimatedText: React.FC<{
+type AnimatedTextProps = {
   children: React.ReactNode;
-  quadrant?: Quadrant;
+  quadrant?: Direction;
   speed?: number;
+  distance?: number; // how far it moves in pixels
+  damping?: number;
+  stiffness?: number;
   style?: React.CSSProperties;
-}> = ({ children, quadrant = "bottom-left", speed = 1.0, style = {} }) => {
+};
+
+export const AnimatedText: React.FC<AnimatedTextProps> = ({
+  children,
+  quadrant = "bottom-left",
+  speed = 1,
+  distance = 100,
+  damping = 20,
+  stiffness = 100,
+  style = {},
+}) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -17,19 +39,40 @@ export const AnimatedText: React.FC<{
     frame,
     fps,
     config: {
-      damping: 20,
-      stiffness: 100,
+      damping,
+      stiffness,
       mass: 1 / speed,
     },
   });
 
-  const translateX = quadrant.includes("left")
-    ? interpolate(progress, [0, 1], [-100, 0])
-    : interpolate(progress, [0, 1], [100, 0]);
+  const getTranslation = (direction: Direction) => {
+    switch (direction) {
+      case "top":
+        return { x: 0, y: -distance };
+      case "bottom":
+        return { x: 0, y: distance };
+      case "left":
+        return { x: -distance, y: 0 };
+      case "right":
+        return { x: distance, y: 0 };
+      case "top-left":
+        return { x: -distance, y: -distance };
+      case "top-right":
+        return { x: distance, y: -distance };
+      case "bottom-left":
+        return { x: -distance, y: distance };
+      case "bottom-right":
+        return { x: distance, y: distance };
+      case "center":
+      default:
+        return { x: 0, y: 0 };
+    }
+  };
 
-  const translateY = quadrant.includes("top")
-    ? interpolate(progress, [0, 1], [-100, 0])
-    : interpolate(progress, [0, 1], [100, 0]);
+  const { x, y } = getTranslation(quadrant);
+
+  const translateX = interpolate(progress, [0, 1], [x, 0]);
+  const translateY = interpolate(progress, [0, 1], [y, 0]);
 
   return (
     <div
